@@ -29,13 +29,15 @@ dutch = SampleTexts(config.get('documents', 'train_dutch'),
                     n_doc=config.getint('documents', 'n_documents'),
                     min_length=config.getint('documents', 'min_n_sentences'),
                     max_length=config.getint('documents', 'max_n_sentences'),
+                    skip=config.getint('documents', 'skip'),
                     random_state=random_state)
 
 flemish = SampleTexts(config.get('documents', 'train_flemish'),
-                    n_doc=config.getint('documents', 'n_documents'),
-                    min_length=config.getint('documents', 'min_n_sentences'),
-                    max_length=config.getint('documents', 'max_n_sentences'),
-                    random_state=random_state)
+                      n_doc=config.getint('documents', 'n_documents'),
+                      min_length=config.getint('documents', 'min_n_sentences'),
+                      max_length=config.getint('documents', 'max_n_sentences'),
+                      skip=config.getint('document', 'skip'),
+                      random_state=random_state)
 
 # initialiseer een vector-space model. Dit is een Pipeline waarmee
 # de teksten worden ingeladen, getokeniseerd (naar woord of karakters)

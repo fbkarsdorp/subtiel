@@ -7,6 +7,8 @@ sample = yes
 min_n_sentences = 100
 max_n_sentences = 1000
 n_documents = 100
+# moves the cursor forward n lines after each document
+skip = 1000
 
 [vector-space]
 
