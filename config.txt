@@ -1,9 +1,7 @@
 [documents]
 
-# train_dutch = /scratch/antalb/sonarbycountry/sonarbycountry.NL.txt
-# train_flemish = /scratch/antalb/sonarbycountry/sonarbycountry.B.txt
-train_dutch = ../../animacy-detection/data/vvb.sentences.txt
-train_flemish = ../../animacy-detection/data/vvb.sentences.txt
+train_dutch = /scratch/antalb/sonarbycountry/sonarbycountry.NL.txt
+train_flemish = /scratch/antalb/sonarbycountry/sonarbycountry.B.txt
 # test = ???
 sample = yes
 min_n_sentences = 100
