@@ -16,12 +16,13 @@ class SampleTexts(object):
     >>>    print text
     """
     def __init__(self, filename, n_doc=None, min_length=10, max_length=100,
-                 random_state=None):
+                 random_state=None, skip=1000):
         self.filename = filename
         self.min_length = min_length
         self.max_length = max_length
         self.rnd = np.random.RandomState(random_state)
         self.n_doc = n_doc
+        self.skip = skip
         self.n = 0
 
     def __iter__(self):
@@ -33,3 +34,6 @@ class SampleTexts(object):
                     raise StopIteration
                 yield text
                 self.n += 1
+                if self.skip:
+                    # move the cursor n (specified by self.skip) sentences further
+                    islice(infile, self.skip)
