@@ -1,13 +1,8 @@
 import codecs
-import sys
 
-from itertools import islice, chain
+from itertools import islice
 
 import numpy as np
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.svm import LinearSVC
-from sklearn.utils import shuffle
 
 
 class SampleTexts(object):
@@ -38,22 +33,3 @@ class SampleTexts(object):
                     raise StopIteration
                 yield text
                 self.n += 1
-
-# set a random seed for reproduceability
-random_state = 2014
-# setup a sampler for dutch and flemish
-dutch = SampleTexts(sys.argv[1], n_doc=10, random_state=random_state)
-flemish = SampleTexts(sys.argv[2], n_doc=10, random_state=random_state)
-# initialize the vector space model, here I use a simple tfidf vectorizer
-# but we could also use the sparse PLM implementation
-vectorizer = TfidfVectorizer(ngram_range=(1, 1), analyzer='word', min_df=1)
-# fit and transform the data according to the vector space model
-X = vectorizer.fit_transform(chain(dutch, flemish))
-# we need an array of labels corresponding to each document:
-y = np.array([0] * dutch.n + [1] * flemish.n)
-# it is probably a good idea to shuffle the data first (depends on our classifier)
-X, y = shuffle(X, y, random_state=random_state)
-# now set up a classifier (I'm using the LinearSVC here), and train (fit) it:
-classifier = LinearSVC(random_state=random_state)
-classifier.fit(X, y)
-# now we can use the classifier to predict stuff! yay!

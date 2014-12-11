@@ -1,0 +1,33 @@
+[documents]
+
+# train_dutch = /scratch/antalb/sonarbycountry/sonarbycountry.NL.txt
+# train_flemish = /scratch/antalb/sonarbycountry/sonarbycountry.B.txt
+train_dutch = ../../animacy-detection/data/vvb.sentences.txt
+train_flemish = ../../animacy-detection/data/vvb.sentences.txt
+# test = ???
+sample = yes
+min_n_sentences = 100
+max_n_sentences = 1000
+n_documents = 100
+
+[vector-space]
+
+# choose from idf, tf, plm, std (burrows-delta)
+model = idf
+# word or char
+feature-type = word
+ngram-range = 1, 1
+min-document-frequency = 5
+max-document-frequency = 0.8
+feature-selection = no
+percentile = 20
+# lambda (sparsity parameter for Parsimonious Language Model)
+lambda = 0.1
+plm-iterations = 10
+
+[classifier]
+# choose from hinge (=linear SVM), log (=logistic regression)
+loss = hinge
+
+[other]
+random-state = 2014
