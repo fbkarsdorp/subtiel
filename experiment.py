@@ -2,6 +2,8 @@ import ConfigParser
 from itertools import chain
 
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import seaborn as sb
 sb.plt.ioff()
 
