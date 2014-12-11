@@ -3,6 +3,7 @@ from itertools import chain
 
 import numpy as np
 import seaborn as sb
+sb.plt.ioff()
 
 from sklearn.linear_model import SGDClassifier
 from sklearn.cross_validation import train_test_split
