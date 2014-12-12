@@ -2,7 +2,7 @@
 
 train_dutch = /scratch/antalb/sonarbycountry/sonarbycountry.NL.txt
 train_flemish = /scratch/antalb/sonarbycountry/sonarbycountry.B.txt
-# test = ???
+test = no
 sample = yes
 min_n_sentences = 100
 max_n_sentences = 1000

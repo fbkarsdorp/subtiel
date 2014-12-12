@@ -1,4 +1,7 @@
+import codecs
 import ConfigParser
+import glob
+import os
 from itertools import chain
 
 import numpy as np
@@ -20,6 +23,11 @@ from sample_documents import SampleTexts
 config = ConfigParser.ConfigParser()
 config.read("config.txt")
 
+def read_files(filenames):
+    for filename in filenames:
+        with codecs.open(filename, encoding='utf-8') as f:
+            yield f.read()
+
 # set a random seed for reproduceability
 random_state = config.getint('other', 'random-state')
 # De volgende twee initialisaties van de klasse SampleTexts stellen
@@ -36,7 +44,7 @@ flemish = SampleTexts(config.get('documents', 'train_flemish'),
                       n_doc=config.getint('documents', 'n_documents'),
                       min_length=config.getint('documents', 'min_n_sentences'),
                       max_length=config.getint('documents', 'max_n_sentences'),
-                      skip=config.getint('document', 'skip'),
+                      skip=config.getint('documents', 'skip'),
                       random_state=random_state)
 
 # initialiseer een vector-space model. Dit is een Pipeline waarmee
@@ -71,10 +79,17 @@ y = np.array([0] * dutch.n + [1] * flemish.n)
 # te shufflelen.
 X, y = shuffle(X, y, random_state=random_state)
 
-# met the functie train_test_split, verdelen we de data in een random
-# training en test deel.
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=random_state)
+# als er geen test directory opgegeven is, gaan we ervanuit dat er getrained
+# en getest moet worden op de training data.
+if config.get('documents', 'test_dir') == 'no':
+    # met the functie train_test_split, verdelen we de data in een random
+    # training en test deel.
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=random_state)
+# anders maken lezen we alle test documenten in
+else:
+    doc_ids = glob.glob(os.path.join(config.get('documents', 'test'), "*.txt"))
+    X_test = vectorizer.transform(read_files(doc_ids))
 
 # Als in het configuratiebestand feature-selectie op yes staat, passen
 # we X^2 feature selectie toe op de data en nemen daarvan de x% beste
@@ -96,16 +111,23 @@ classifier = SGDClassifier(n_iter=50, loss=config.get("classifier", "loss"),
 # We fitten (trainen) de classifier als volgt:
 classifier.fit(X_train, y_train)
 
-# nu is alles klaar om de classifier te testen op onze test set
-preds = classifier.predict(X_test)
+if config.get('documents', 'test_dir') == 'no':
+    # nu is alles klaar om de classifier te testen op onze test set
+    preds = classifier.predict(X_test)
 
-# de decision_function methode geeft de daadwerkelijke getallen terug
-# op basis waarvan de classificatie wordt gemaakt Dat kan handig zijn
-# later om een drempelwaarde te bepalen
-decisions = classifier.decision_function(X_test)
-print classification_report(y_test, preds)
-print "Area Under the Precision Recall Curve:",  average_precision_score(y_test, decisions)
-precision, recall, _ = precision_recall_curve(y_test, decisions)
-sb.plt.figure()
-sb.plt.plot(recall, precision)
-sb.plt.savefig("Precision-recall-curve.pdf")
+    # de decision_function methode geeft de daadwerkelijke getallen terug
+    # op basis waarvan de classificatie wordt gemaakt Dat kan handig zijn
+    # later om een drempelwaarde te bepalen
+    decisions = classifier.decision_function(X_test)
+    print classification_report(y_test, preds)
+    print "Area Under the Precision Recall Curve:",  average_precision_score(y_test, decisions)
+    precision, recall, _ = precision_recall_curve(y_test, decisions)
+    sb.plt.figure()
+    sb.plt.plot(recall, precision)
+    sb.plt.savefig("Precision-recall-curve.pdf")
+else:
+    decisions = classifier.decisions(X_test)
+    preds = classifier.predict(X_test)
+    for doc_id, decision, pred in sorted(zip(doc_ids, decisions, preds), key=lambda i: i[1]):
+        print 'Document:', doc_id, "Score: %.4f, Prediction: %s" % (
+            decision, 'NL' if pred == 0 else 'B')
