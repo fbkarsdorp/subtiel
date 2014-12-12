@@ -81,7 +81,7 @@ X, y = shuffle(X, y, random_state=random_state)
 
 # als er geen test directory opgegeven is, gaan we ervanuit dat er getrained
 # en getest moet worden op de training data.
-if config.get('documents', 'test_dir') == 'no':
+if config.get('documents', 'test') == 'no':
     # met the functie train_test_split, verdelen we de data in een random
     # training en test deel.
     X_train, X_test, y_train, y_test = train_test_split(
@@ -111,7 +111,7 @@ classifier = SGDClassifier(n_iter=50, loss=config.get("classifier", "loss"),
 # We fitten (trainen) de classifier als volgt:
 classifier.fit(X_train, y_train)
 
-if config.get('documents', 'test_dir') == 'no':
+if config.get('documents', 'test') == 'no':
     # nu is alles klaar om de classifier te testen op onze test set
     preds = classifier.predict(X_test)
 
