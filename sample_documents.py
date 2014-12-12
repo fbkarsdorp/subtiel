@@ -15,13 +15,13 @@ class SampleTexts(object):
     >>> for text in text_generator:
     >>>    print text
     """
-    def __init__(self, filename, n_doc=None, min_length=10, max_length=100,
+    def __init__(self, filename, n_doc=0, min_length=10, max_length=100,
                  random_state=None, skip=1000):
         self.filename = filename
         self.min_length = min_length
         self.max_length = max_length
         self.rnd = np.random.RandomState(random_state)
-        self.n_doc = n_doc
+        self.n_doc = None if n_doc == 0 else n_doc
         self.skip = skip
         self.n = 0
 
