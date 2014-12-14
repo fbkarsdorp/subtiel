@@ -35,7 +35,7 @@ def print_topn_features(vectorizer, clf, class_labels, n=10):
     print "top 10 keywords per class:"
     for i, category in enumerate(class_labels):
         top10 = np.argsort(clf.coef_[i])[-n:]
-        yield category, ', '.join(feature_names[top10[::-1]])
+        print category, ', '.join(feature_names[top10[::-1]])
 
 # set a random seed for reproduceability
 random_state = config.getint('other', 'random-state')
