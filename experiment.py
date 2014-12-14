@@ -34,6 +34,7 @@ def show_most_informative_features(vectorizer, clf, n=20):
     top = zip(coefs_with_fns[:n], coefs_with_fns[:-(n + 1):-1])
     for (coef_1, fn_1), (coef_2, fn_2) in top:
         print "\t%.4f\t%-15s\t\t%.4f\t%-15s" % (coef_1, fn_1, coef_2, fn_2)
+    print
 
 # set a random seed for reproduceability
 random_state = config.getint('other', 'random-state')
