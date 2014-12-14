@@ -28,14 +28,12 @@ def read_files(filenames):
         with codecs.open(filename, encoding='utf-8') as f:
             yield f.read()
 
-def print_topn_features(vectorizer, clf, class_labels, n=10):
-    """Prints features with the highest coefficient values, per class"""
-    feature_names = np.array([f for f in vectorizer.named_steps['tf'].get_feature_names()])
-    print "dimensionality: %d" % clf.coef_.shape[1]
-    print "top 10 keywords per class:"
-    for i, category in enumerate(class_labels):
-        top10 = np.argsort(clf.coef_[i])[-n:]
-        print category, ', '.join(feature_names[top10[::-1]])
+def show_most_informative_features(vectorizer, clf, n=20):
+    feature_names = vectorizer.named_steps['tf'].get_feature_names()
+    coefs_with_fns = sorted(zip(clf.coef_[0], feature_names))
+    top = zip(coefs_with_fns[:n], coefs_with_fns[:-(n + 1):-1])
+    for (coef_1, fn_1), (coef_2, fn_2) in top:
+        print "\t%.4f\t%-15s\t\t%.4f\t%-15s" % (coef_1, fn_1, coef_2, fn_2)
 
 # set a random seed for reproduceability
 random_state = config.getint('other', 'random-state')
@@ -121,7 +119,7 @@ classifier = SGDClassifier(n_iter=50, loss=config.get("classifier", "loss"),
 # We fitten (trainen) de classifier als volgt:
 classifier.fit(X_train, y_train)
 
-print_topn_features(vectorizer, classifier, ("NL", "B"),
+show_most_informative_features(vectorizer, classifier,
                     n=config.getint("classifier", "top-features"))
 
 if config.get('documents', 'test') == 'no':
