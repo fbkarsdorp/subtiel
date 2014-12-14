@@ -127,7 +127,7 @@ if config.get('documents', 'test') == 'no':
     sb.plt.plot(recall, precision)
     sb.plt.savefig("Precision-recall-curve.pdf")
 else:
-    decisions = classifier.decisions(X_test)
+    decisions = classifier.decision_function(X_test)
     preds = classifier.predict(X_test)
     for doc_id, decision, pred in sorted(zip(doc_ids, decisions, preds), key=lambda i: i[1]):
         print 'Document:', doc_id, "Score: %.4f, Prediction: %s" % (
