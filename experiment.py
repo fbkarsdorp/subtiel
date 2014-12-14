@@ -28,6 +28,15 @@ def read_files(filenames):
         with codecs.open(filename, encoding='utf-8') as f:
             yield f.read()
 
+def print_top10(vectorizer, clf, class_labels, n=10):
+    """Prints features with the highest coefficient values, per class"""
+    feature_names = np.array([f for f in vectorizer.get_feature_names()])
+    print "dimensionality: %d" % clf.coef_.shape[1]
+    print "top 10 keywords per class:"
+    for i, category in enumerate(class_labels):
+        top10 = np.argsort(clf.coef_[i])[-n:]
+        yield category, ', '.join(feature_names[top10[::-1]])
+
 # set a random seed for reproduceability
 random_state = config.getint('other', 'random-state')
 # De volgende twee initialisaties van de klasse SampleTexts stellen
@@ -111,6 +120,8 @@ classifier = SGDClassifier(n_iter=50, loss=config.get("classifier", "loss"),
                            shuffle=True, random_state=random_state)
 # We fitten (trainen) de classifier als volgt:
 classifier.fit(X_train, y_train)
+
+print_top10(vectorizer, classifier, ("NL", "B"), n=config.getint("classifier", "top-features"))
 
 if config.get('documents', 'test') == 'no':
     # nu is alles klaar om de classifier te testen op onze test set

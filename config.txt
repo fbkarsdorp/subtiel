@@ -28,6 +28,7 @@ plm-iterations = 10
 [classifier]
 # choose from hinge (=linear SVM), log (=logistic regression)
 loss = hinge
+top-features = 10
 
 [other]
 random-state = 2014
