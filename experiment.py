@@ -88,6 +88,7 @@ if config.get('documents', 'test') == 'no':
         X, y, test_size=0.2, random_state=random_state)
 # anders maken lezen we alle test documenten in
 else:
+    X_train, y_train = X, y
     doc_ids = glob.glob(os.path.join(config.get('documents', 'test'), "*.txt"))
     X_test = vectorizer.transform(read_files(doc_ids))
 
