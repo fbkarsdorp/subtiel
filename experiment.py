@@ -30,7 +30,7 @@ def read_files(filenames):
 
 def print_topn_features(vectorizer, clf, class_labels, n=10):
     """Prints features with the highest coefficient values, per class"""
-    feature_names = np.array([f for f in vectorizer.get_feature_names()])
+    feature_names = np.array([f for f in vectorizer.named_steps['tf'].get_feature_names()])
     print "dimensionality: %d" % clf.coef_.shape[1]
     print "top 10 keywords per class:"
     for i, category in enumerate(class_labels):
