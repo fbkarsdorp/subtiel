@@ -19,6 +19,7 @@ feature-type = word
 ngram-range = 1, 1
 min-document-frequency = 5
 max-document-frequency = 0.8
+max_features = 0
 feature-selection = no
 percentile = 20
 # lambda (sparsity parameter for Parsimonious Language Model)

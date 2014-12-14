@@ -65,6 +65,8 @@ vectorizer = PIPELINES[config.get('vector-space', 'model')]
 # en voegen die toe aan de vectorizer
 parameters = {'tf__analyzer': config.get('vector-space', 'feature-type'),
               'tf__ngram_range': map(int, config.get('vector-space', 'ngram-range').split(','))}
+if config.getint("vector-space", "max_features") > 0:
+    parameters['tf__max_features'] = config.getint("vector-space", "max_features")
 if config.get('vector-space', 'model') == 'plm':
     parameters['plm__weight'] = config.getfloat('vector-space', 'lambda')
     parameters['plm__iterations'] = config.getint('vector-space', 'plm-iterations')
